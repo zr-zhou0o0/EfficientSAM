@@ -14,6 +14,7 @@ def build_efficient_sam_vitt():
     ).eval()
 
 
+
 def build_efficient_sam_vits():
     return build_efficient_sam(
         encoder_patch_embed_dim=384,
