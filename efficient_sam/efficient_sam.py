@@ -180,7 +180,7 @@ class EfficientSam(nn.Module):
         batched_images = self.preprocess(batched_images)
         return self.image_encoder(batched_images)
 
-    # HERE?
+    # HERE
     def forward(
         self,
         batched_images: torch.Tensor,
@@ -208,12 +208,12 @@ class EfficientSam(nn.Module):
         image_embeddings = self.get_image_embeddings(batched_images)
 
 
-        # XXXXXX REFACTORING
 # ************
+        # for image embedding
         if img_embedding_only:
             print("image_embeddings_shape: ", image_embeddings.shape) # (1, 256, 64, 64)
             print("image_embeddings: ", image_embeddings)
-            return image_embeddings # XXX FOR IMAGE EMBEDDINGS ONLY
+            return image_embeddings 
     
 # ************
         return self.predict_masks(
@@ -265,7 +265,6 @@ def build_efficient_sam(encoder_patch_embed_dim, encoder_num_heads, checkpoint=N
     else:
         activation_fn = nn.GELU
 
-    # HERE the image encoder init!
     image_encoder = ImageEncoderViT(
         img_size=img_size,
         patch_size=encoder_patch_size,
