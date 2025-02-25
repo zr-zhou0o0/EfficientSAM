@@ -180,12 +180,14 @@ class EfficientSam(nn.Module):
         batched_images = self.preprocess(batched_images)
         return self.image_encoder(batched_images)
 
+    # HERE?
     def forward(
         self,
         batched_images: torch.Tensor,
         batched_points: torch.Tensor,
         batched_point_labels: torch.Tensor,
         scale_to_original_image_size: bool = True,
+        img_embedding_only: bool = False
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Predicts masks end-to-end from provided images and prompts.
@@ -204,6 +206,16 @@ class EfficientSam(nn.Module):
         """
         batch_size, _, input_h, input_w = batched_images.shape
         image_embeddings = self.get_image_embeddings(batched_images)
+
+
+        # XXXXXX REFACTORING
+# ************
+        if img_embedding_only:
+            print("image_embeddings_shape: ", image_embeddings.shape) # (1, 256, 64, 64)
+            print("image_embeddings: ", image_embeddings)
+            return image_embeddings # XXX FOR IMAGE EMBEDDINGS ONLY
+    
+# ************
         return self.predict_masks(
             image_embeddings,
             batched_points,
@@ -253,6 +265,7 @@ def build_efficient_sam(encoder_patch_embed_dim, encoder_num_heads, checkpoint=N
     else:
         activation_fn = nn.GELU
 
+    # HERE the image encoder init!
     image_encoder = ImageEncoderViT(
         img_size=img_size,
         patch_size=encoder_patch_size,

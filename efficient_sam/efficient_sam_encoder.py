@@ -79,7 +79,8 @@ class Attention(nn.Module):
             qkv[1],
             qkv[2],
         )
-        attn = (q @ k.transpose(-2, -1)) * self.scale
+        # attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = (q[:,:,:,None,:] * k[:,:,None,:,:]).sum(-1) * self.scale
         attn = attn.softmax(dim=-1)
         x = (attn @ v).transpose(1, 2).reshape(B, N, C)
         x = self.proj(x)

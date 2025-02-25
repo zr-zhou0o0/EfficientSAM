@@ -39,6 +39,10 @@ for model_name, model in models.items():
         input_points,
         input_labels,
     )
+
+    print('predicted logits shape:', predicted_logits.shape)
+    print('predicted iou shape:', predicted_iou.shape)
+
     sorted_ids = torch.argsort(predicted_iou, dim=-1, descending=True)
     predicted_iou = torch.take_along_dim(predicted_iou, sorted_ids, dim=2)
     predicted_logits = torch.take_along_dim(
@@ -49,6 +53,8 @@ for model_name, model in models.items():
     # The second dimension is the number of masks we want to generate (in this case, it is only 1)
     # The third dimension is the number of candidate masks output by the model.
     # For this demo we use the first mask.
+
+
     mask = torch.ge(predicted_logits[0, 0, 0, :, :], 0).cpu().detach().numpy()
     masked_image_np = sample_image_np.copy().astype(np.uint8) * mask[:,:,None]
     Image.fromarray(masked_image_np).save(f"figs/examples/dogs_{model_name}_mask.png")
