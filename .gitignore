@@ -3,3 +3,7 @@
 *.pyd
 __py
 **/__pycache__/
+
+data
+torchscripted_model
+weights
