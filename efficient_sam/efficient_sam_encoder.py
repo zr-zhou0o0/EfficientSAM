@@ -242,6 +242,7 @@ class ImageEncoderViT(nn.Module):
         assert (
             x.shape[2] == self.img_size and x.shape[3] == self.img_size
         ), "input image size must match self.img_size"
+        print("image size: ", x.shape[2], x.shape[3]) # 1024 1024
         x = self.patch_embed(x)
         # B C H W -> B H W C
         x = x.permute(0, 2, 3, 1)

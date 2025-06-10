@@ -16,7 +16,7 @@ def build_efficient_sam_vitt():
 
 def build_efficient_sam_vits():
     return build_efficient_sam(
-        encoder_patch_embed_dim=384,
+        encoder_patch_embed_dim=384, # 这个不能改，因为是加载ckpt的参数
         encoder_num_heads=6,
         checkpoint="weights/efficient_sam_vits.pt",
     ).eval()

@@ -1,3 +1,5 @@
+# 直接扔到gscd下就可以运行vits！
+
 '''
 fuckthat. it cannot run on gpu!!!
 just vitt with 16x16 grid size can run on gpu.
@@ -120,8 +122,6 @@ def run_everything_ours(img_path, model, device):
     image = Image.open("data/test_imgs/00153_mask.png").convert("L")
     # 把图像转换为bool，白色区域为True，黑色为False
     mask_bool = np.array(image) > 128
-    # mask_bool = np.array(image) > 30
-    # mask_bool = np.array(image) > 0
 
     # HERE resize1
     image = np.array(image)
@@ -168,16 +168,15 @@ def show_anns_ours(mask, ax):
 
 if __name__ == "__main__":
     from efficient_sam.build_efficient_sam import build_efficient_sam_vits
-    from efficient_sam.build_efficient_sam import build_efficient_sam_vitt
+    # from efficient_sam.build_efficient_sam import build_efficient_sam_vitt
     import zipfile
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # device = "cpu" 
 
     # with zipfile.ZipFile("weights/efficient_sam_vits.pt.zip", 'r') as zip_ref:
     #     zip_ref.extractall("weights")
-    # efficient_sam_vits_model = build_efficient_sam_vits().to(device)
-    efficient_sam_vits_model = build_efficient_sam_vitt().to(device)
+    efficient_sam_vits_model = build_efficient_sam_vits().to(device)
+    # efficient_sam_vits_model = build_efficient_sam_vitt().to(device)
 
     efficient_sam_vits_model.eval()
 
@@ -187,7 +186,7 @@ if __name__ == "__main__":
     print("image.shape: ", image.shape)  # image.shape:  (755, 1007, 3)
 
     # resize
-    # image = cv2.resize(image, (image.shape[1] // 4, image.shape[0] // 4))
+    image = cv2.resize(image, (image.shape[1] // 4, image.shape[0] // 4))
     print("resized image.shape: ", image.shape)  # resized image.shape:  (188, 252, 3)
     
 
@@ -223,13 +222,6 @@ if __name__ == "__main__":
 
     ax.imshow(mask_only_img)
     ax.axis('off')
-    ax.title.set_text("Mask Only")
+    # ax.title.set_text("Mask Only")
     plt.show()
     plt.savefig("data/test_imgs/mask_only.png")
-
-
-
-
-#  masks = (hyper_in @ upscaled_embedding.view(b, c, h * w)).view(b, -1, h, w)
-# RuntimeError: cannot reshape tensor of 0 elements into shape [0, -1, 256, 256] because the unspecified dimension size -1 can be any value and is ambiguous
-#  看来是哪里忘了改回来了。--是因为predict prompt数量是0

@@ -178,7 +178,11 @@ class EfficientSam(nn.Module):
           The last embedding corresponds to the final layer.
         """
         batched_images = self.preprocess(batched_images)
+        print("batched_images.shape", batched_images.shape)
+        print("self.image_encoder.img_size", self.image_encoder.img_size)
+        print("self.image_encoder.image_embedding_size", self.image_encoder.image_embedding_size)
         return self.image_encoder(batched_images)
+        
 
     # HERE
     def forward(
@@ -216,6 +220,8 @@ class EfficientSam(nn.Module):
             return image_embeddings 
     
 # ************
+        print("batched_points.shape", batched_points.shape)
+        print("batched_point_labels.shape", batched_point_labels.shape)
         return self.predict_masks(
             image_embeddings,
             batched_points,
@@ -230,7 +236,7 @@ class EfficientSam(nn.Module):
     def preprocess(self, x: torch.Tensor) -> torch.Tensor:
         """Normalize pixel values and pad to a square input."""
         if (
-            x.shape[2] != self.image_encoder.img_size
+            x.shape[2] != self.image_encoder.img_size # so the size is fixed...?
             or x.shape[3] != self.image_encoder.img_size
         ):
             x = F.interpolate(
@@ -242,7 +248,8 @@ class EfficientSam(nn.Module):
 
 
 def build_efficient_sam(encoder_patch_embed_dim, encoder_num_heads, checkpoint=None):
-    img_size = 1024
+    img_size = 1024 # HERE??????
+    # img_size = 512 # shape not match, runtime error
     encoder_patch_size = 16
     encoder_depth = 12
     encoder_mlp_ratio = 4.0
